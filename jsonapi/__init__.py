@@ -13,12 +13,21 @@ def load_args(args=sys.argv[1:]):
 
     parser = argparse.ArgumentParser(
         description="Parse some Json command line opts")
-    parser.add_argument('url')
-    parser.add_argument('data', nargs='?')
-    parser.add_argument('-m', '--method', choices=['GET', 'POST'], default='GET')
-    parser.add_argument('-v', '--version', default='2010')
-    parser.add_argument('-s', '--sid', default=os.getenv("TWILIO_ACCOUNT_SID"))
-    parser.add_argument('-t', '--token', default=os.getenv("TWILIO_AUTH_TOKEN"))
+    parser.add_argument('url',
+                        help='The URL to request, after /2010-04-01/Accounts')
+    parser.add_argument(
+        'data', nargs='?', help='The body of a post request, if any')
+    parser.add_argument('-m', '--method', choices=['GET', 'POST'],
+                        default='GET', help='HTTP method to use')
+    parser.add_argument('-v', '--version', default='2010',
+                        choices=['2008', '2010'],
+                        help='Twilio API version to use')
+    parser.add_argument('-s', '--sid', default=os.getenv("TWILIO_ACCOUNT_SID"),
+                        help=('Account Sid. Defaults to the TWILIO_ACCOUNT_SID'
+                              ' environment variable'))
+    parser.add_argument('-t', '--token', default=os.getenv("TWILIO_AUTH_TOKEN"),
+                        help=('Auth Token. Defaults to the TWILIO_AUTH_TOKEN'
+                              ' environment variable'))
     return parser.parse_args(args)
 
 def add_json_to_path(url):
