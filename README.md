@@ -5,10 +5,17 @@ JSONapi is a convenience wrapper for the Twilio API.
 ### Usage
 
 ```bash
+# Set your account sid and auth token in your environment, so you don't have to
+# enter them every time
 export TWILIO_ACCOUNT_SID='AC1234'
 export TWILIO_AUTH_TOKEN='cdef'
-jsonapi /Calls
+
+# Then retrieve a page of calls
+jsonapi '/Calls?PageSize=1'
 ```
+
+You'll get back pretty printed json like this:
+
 ```json
 {   u'calls': [   {   u'account_sid': u'AC58f1e002b1c6b88ca90a012a4be0c',
                       u'annotation': None,
