@@ -67,6 +67,59 @@ By default the 2010 API is used. To use the 2008 API:
 jsonapi /Calls -v 2008
 ```
 
+#### Other Uses
+
+Retrieve a list of your phone numbers and sids:
+
+```bash
+jsonapi /IncomingPhoneNumbers
+```
+
+Retrieve your latest debugger notifications:
+
+```bash
+jsonapi /Notifications
+```
+
+Filter Calls by a number:
+
+```bash
+jsonapi '/Calls?From=+14102717005'
+```
+
+Retrieve info about a call:
+
+```bash
+jsonapi /Calls/CA123
+```
+```python
+{   u'account_sid': u'AC58f1e002b1c6b88ca90a012a4be0c',
+    u'annotation': None,
+    u'answered_by': None,
+    u'api_version': u'2010-04-01',
+    u'caller_name': None,
+    u'date_created': u'Sat, 11 Aug 2012 21:10:17 +0000',
+    u'date_updated': u'Sat, 11 Aug 2012 21:10:58 +0000',
+    u'direction': u'outbound-api',
+    u'duration': u'11',
+    u'end_time': u'Sat, 11 Aug 2012 21:10:58 +0000',
+    u'forwarded_from': None,
+    u'from': u'+14103920364',
+    u'from_formatted': u'(410) 392-0364',
+    u'group_sid': None,
+    u'parent_call_sid': None,
+    u'phone_number_sid': u'PN5fb9e7778e184c8baa86c1fb7544ca0f',
+    u'price': u'-0.02000',
+    u'sid': u'CAc56534caa45873571865df8b1ad20e35',
+    u'start_time': u'Sat, 11 Aug 2012 21:10:47 +0000',
+    u'status': u'completed',
+    u'subresource_uris': {   u'notifications': u'/2010-04-01/Accounts/AC58f1e002b1c6b88ca90a012a4be0c/Calls/CAc85f34caa4587aa70865df8b1ad20e35/Notifications.json',
+        u'recordings': u'/2010-04-01/Accounts/AC58f1e002b1c6b88ca90a012a4be0c/Calls/CAc85f34caa4587aa70865df8b1ad20e35/Recordings.json'},
+    u'to': u'+19252717005',
+    u'to_formatted': u'(925) 271-7005',
+    u'uri': u'/2010-04-01/Accounts/AC58f1e002b1c6b88ca90a012a4be0c/Calls/CAc85f34caa4587aa70865df8b1ad20e35.json'}
+```
+
 ## Installation
 
 Clone this repository, then run:
