@@ -16,7 +16,7 @@ jsonapi '/Calls?PageSize=1'
 
 You'll get back pretty printed json like this:
 
-```json
+```python
 {   u'calls': [   {   u'account_sid': u'AC58f1e002b1c6b88ca90a012a4be0c',
                       u'annotation': None,
                       u'answered_by': None,
@@ -67,3 +67,12 @@ By default the 2010 API is used. To use the 2008 API:
 jsonapi /Calls -v 2008
 ```
 
+## Installation
+
+Clone this repository, then run:
+
+```bash
+python setup.py install
+```
+
+at the command line.
