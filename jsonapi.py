@@ -2,7 +2,6 @@
 import argparse
 import json
 import os
-import pprint
 import re
 import sys
 import urlparse
@@ -28,6 +27,8 @@ def load_args(args=sys.argv[1:]):
     parser.add_argument('-t', '--token', default=os.getenv("TWILIO_AUTH_TOKEN"),
                         help=('Auth Token. Defaults to the TWILIO_AUTH_TOKEN'
                               ' environment variable'))
+    parser.add_argument('-x', '--xml', action='store_true',
+                        help=('Return XML response'))
     return parser.parse_args(args)
 
 def add_json_to_path(url):
@@ -41,10 +42,11 @@ def add_json_to_path(url):
 def get_version(year):
     return '2008-08-01' if year == '2008' else '2010-04-01'
 
-def make_request(url, year, method, data, sid, token):
+def make_request(url, year, method, data, sid, token, xml):
 
     version = get_version(year)
-    url = add_json_to_path(url)
+    if not xml:
+        url = add_json_to_path(url)
 
     # skip the boring uri parts by default
     if not re.search('^/(2008-08-01|2010-04-01)/Accounts', url):
@@ -55,14 +57,13 @@ def make_request(url, year, method, data, sid, token):
         url, data=data, auth=(sid, token),
         headers={'Accept': 'application/json'})
 
-    a = json.loads(response.content)
-    pprint.pprint(a, indent=4)
+    print(json.dumps(json.loads(response.content), indent=4))
     return response
 
 def main():
     args = load_args()
     make_request(args.url, args.version, args.method.lower(), args.data,
-                 args.sid, args.token)
+                 args.sid, args.token, args.xml)
 
 if __name__ == "__main__":
     main()
