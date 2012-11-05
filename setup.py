@@ -14,6 +14,9 @@ setup(
         "console_scripts": [
             "jsonapi = jsonapi:main",
         ],
-    }
+    },
+    install_requires=[
+        'requests'
+    ]
 )
 
