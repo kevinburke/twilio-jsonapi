@@ -1,4 +1,9 @@
 #!/usr/bin/env python
+"""
+Convenience wrapper for accessing the Twilio API.
+
+@author Kevin Burke <kev@inburke.com>
+"""
 import argparse
 import json
 import os
@@ -43,6 +48,16 @@ def get_version(year):
     return '2008-08-01' if year == '2008' else '2010-04-01'
 
 def make_request(url, year, method, data, sid, token, xml):
+
+    if not sid:
+        raise ValueError("Please set a valid AccountSid as TWILIO_ACCOUNT_SID "
+                         "in your environment, or by passing the --sid flag "
+                         "at the command line.")
+
+    if not token:
+        raise ValueError("Please set a valid Auth Token as TWILIO_AUTH_TOKEN "
+                         "in your environment, or by passing the --token flag "
+                         "at the command line.")
 
     version = get_version(year)
     if not xml:
