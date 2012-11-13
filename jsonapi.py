@@ -21,8 +21,8 @@ def load_args(args=sys.argv[1:]):
                         help='The URL to request, after /2010-04-01/Accounts/AC123')
     parser.add_argument('-X', '--method', choices=['GET', 'POST'],
                         default='GET', help='HTTP method to use')
-    parser.add_argument('-d', '--data', choices=['GET', 'POST'],
-                        default='GET', help='The body of a post request, if any')
+    parser.add_argument('-d', '--data', action='append',
+                        help='The body of a post request, if any')
     parser.add_argument('-v', '--version', default='2010',
                         choices=['2008', '2010'],
                         help='Twilio API version to use')
@@ -68,6 +68,7 @@ def make_request(url, year, method, data, sid, token, xml):
         url = "".join(['/', version, "/Accounts/", sid, url])
 
     url = "".join(["https://api.twilio.com", url])
+    data = {key: value for [key, value] in map(lambda x: x.split('='), data)}
     response = getattr(requests, method)(
         url, data=data, auth=(sid, token),
         headers={'Accept': 'application/json'})
