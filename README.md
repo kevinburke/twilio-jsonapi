@@ -1,6 +1,7 @@
 # JSONapi
 
-JSONapi is a convenience wrapper for the Twilio API.
+JSONapi is a convenience wrapper for the [Twilio
+API](https://twilio.com/docs/api/rest).
 
 ### Usage
 
