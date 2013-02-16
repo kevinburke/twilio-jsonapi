@@ -59,20 +59,26 @@ def make_request(url, year, method, data, sid, token, xml):
                          "in your environment, or by passing the --token flag "
                          "at the command line.")
 
-    version = get_version(year)
     if not xml:
         url = add_json_to_path(url)
 
     # skip the boring uri parts by default
     if not re.search('^/(2008-08-01|2010-04-01)/Accounts', url):
-        url = "".join(['/', version, "/Accounts/", sid, url])
+        url = "".join(['/', get_version(year), "/Accounts/", sid, url])
 
     url = "".join(["https://api.twilio.com", url])
     if data:
         data = {key: value for [key, value] in map(lambda x: x.split('='), data)}
-    response = getattr(requests, method)(
-        url, data=data, auth=(sid, token),
-        headers={'Accept': 'application/json'})
+
+    if method == "get":
+        response = getattr(requests, method)(
+            url, params=data, auth=(sid, token),
+            headers={'Accept': 'application/json'})
+    else:
+        response = getattr(requests, method)(
+            url, data=data, auth=(sid, token),
+            headers={'Accept': 'application/json'})
+
 
     print(json.dumps(json.loads(response.content), indent=4))
     return response
