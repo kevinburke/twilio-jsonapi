@@ -79,8 +79,10 @@ def make_request(url, year, method, data, sid, token, xml):
             url, data=data, auth=(sid, token),
             headers={'Accept': 'application/json'})
 
-
-    print(json.dumps(json.loads(response.content), indent=4))
+    try:
+        print(json.dumps(json.loads(response.content), indent=4))
+    except:
+        print response.content
     return response
 
 def main():
