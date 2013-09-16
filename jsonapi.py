@@ -12,6 +12,8 @@ import sys
 import urlparse
 
 import requests
+from httpie.core import main as httpie
+
 
 def load_args(args=sys.argv[1:]):
 
@@ -21,8 +23,6 @@ def load_args(args=sys.argv[1:]):
                         help='The URL to request, after /2010-04-01/Accounts/AC123')
     parser.add_argument('-X', '--method', choices=['GET', 'POST'],
                         default='GET', help='HTTP method to use')
-    parser.add_argument('-d', '--data', action='append',
-                        help='The body of a post request, if any')
     parser.add_argument('-v', '--version', default='2010',
                         choices=['2008', '2010'],
                         help='Twilio API version to use')
@@ -34,6 +34,8 @@ def load_args(args=sys.argv[1:]):
                               ' environment variable'))
     parser.add_argument('-x', '--xml', action='store_true',
                         help=('Return XML response'))
+    parser.add_argument('-d', '--data', dest='data', nargs=argparse.REMAINDER,
+                        help='The body of a post request, if any')
     return parser.parse_args(args)
 
 def add_json_to_path(url):
@@ -67,23 +69,17 @@ def make_request(url, year, method, data, sid, token, xml):
         url = "".join(['/', get_version(year), "/Accounts/", sid, url])
 
     url = "".join(["https://api.twilio.com", url])
-    if data:
-        data = {key: value for [key, value] in map(lambda x: x.split('='), data)}
 
-    if method == "get":
-        response = getattr(requests, method)(
-            url, params=data, auth=(sid, token),
-            headers={'Accept': 'application/json'})
-    else:
-        response = getattr(requests, method)(
-            url, data=data, auth=(sid, token),
-            headers={'Accept': 'application/json'})
+    httpie_args = ['-b', method.upper(), url]
 
-    try:
-        print(json.dumps(json.loads(response.content), indent=4))
-    except:
-        print response.content
-    return response
+    if method == 'post' and data is not None:
+        httpie_args.insert(1, '-f') # use form flag
+        data = ['{}="{}"'.format(key, value) for [key, value] in map(lambda x: x.split('='), data)]
+        httpie_args.extend(data) # add data
+
+    httpie_args.extend(['-a', '{}:{}'.format(sid, token)])
+
+    httpie(httpie_args)
 
 def main():
     args = load_args()
