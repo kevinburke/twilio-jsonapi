@@ -74,7 +74,7 @@ def make_request(url, year, method, data, sid, token, xml):
 
     if method == 'post' and data is not None:
         httpie_args.insert(1, '-f') # use form flag
-        data = ['{}="{}"'.format(key, value) for [key, value] in map(lambda x: x.split('='), data)]
+        data = ['{}={}'.format(key, value) for [key, value] in map(lambda x: x.split('='), data)]
         httpie_args.extend(data) # add data
 
     httpie_args.extend(['-a', '{}:{}'.format(sid, token)])
