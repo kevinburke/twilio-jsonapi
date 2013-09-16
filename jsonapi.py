@@ -90,7 +90,7 @@ def make_request(url, year, method, data, sid, token, xml, include_headers):
 def main():
     args = load_args()
     make_request(args.url, args.version, args.method.lower(), args.data,
-                 args.sid, args.token, args.xml, args.headers)
+                 args.sid, args.token, args.xml, args.include)
 
 if __name__ == "__main__":
     main()
