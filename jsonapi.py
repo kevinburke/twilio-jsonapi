@@ -36,6 +36,8 @@ def load_args(args=sys.argv[1:]):
                         help=('Return XML response'))
     parser.add_argument('-d', '--data', dest='data', nargs=argparse.REMAINDER,
                         help='The body of a post request, if any')
+    parser.add_argument('-i', '--include', action='store_true',
+                        help='Include headers')
     return parser.parse_args(args)
 
 def add_json_to_path(url):
@@ -49,7 +51,7 @@ def add_json_to_path(url):
 def get_version(year):
     return '2008-08-01' if year == '2008' else '2010-04-01'
 
-def make_request(url, year, method, data, sid, token, xml):
+def make_request(url, year, method, data, sid, token, xml, include_headers):
 
     if not sid:
         raise ValueError("Please set a valid AccountSid as TWILIO_ACCOUNT_SID "
@@ -70,21 +72,25 @@ def make_request(url, year, method, data, sid, token, xml):
 
     url = "".join(["https://api.twilio.com", url])
 
-    httpie_args = ['-b', method.upper(), url]
+    httpie_args = [method.upper(), url]
+
 
     if method == 'post' and data is not None:
-        httpie_args.insert(1, '-f') # use form flag
-        data = ['{}="{}"'.format(key, value) for [key, value] in map(lambda x: x.split('='), data)]
+        httpie_args.insert(0, '-f') # -f is used to denote form values. must be inserted after '-b'
+        data = ['{}={}'.format(key, value) for [key, value] in map(lambda x: x.split('='), data)]
         httpie_args.extend(data) # add data
 
     httpie_args.extend(['-a', '{}:{}'.format(sid, token)])
+
+    if not include_headers:
+        httpie_args.insert(0, '-b') # -b means only include response body
 
     httpie(httpie_args)
 
 def main():
     args = load_args()
     make_request(args.url, args.version, args.method.lower(), args.data,
-                 args.sid, args.token, args.xml)
+                 args.sid, args.token, args.xml, args.include)
 
 if __name__ == "__main__":
     main()
